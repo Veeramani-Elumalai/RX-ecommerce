@@ -8,7 +8,9 @@ dist
 
 # Node dependencies
 node_modules
-
+.nuxt
+.output
+.env
 # Logs
 logs
 *.log

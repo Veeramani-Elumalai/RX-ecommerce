@@ -1,16 +1,26 @@
-# Dependencies
-**/node_modules
-
-# Nuxt
-customer/.nuxt
-customer/.output
-
-# Environment
-**/.env
+# OS
+.DS_Store
+Thumbs.db
 
 # Logs
 *.log
 
-# OS
-.DS_Store
-Thumbs.db
+# Environment
+.env
+
+# VS Code
+.vscode/
+
+# Node
+**/node_modules
+
+# Nuxt
+**/.nuxt
+**/.output
+
+# React
+**/dist
+
+# Uploads
+server/uploads/*
+!server/uploads/.gitkeep
