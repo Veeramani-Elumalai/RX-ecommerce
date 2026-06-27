@@ -9,6 +9,7 @@ const morgan = require('morgan');
 const config = require('./config/env');
 const healthRoutes = require('./routes/health.routes');
 const authRoutes = require('./routes/auth.routes');
+const categoryRoutes = require('./routes/category.routes');
 const notFoundMiddleware = require('./middleware/notFound.middleware');
 const errorMiddleware = require('./middleware/error.middleware');
 
@@ -23,6 +24,7 @@ app.use(morgan(config.nodeEnv === 'production' ? 'combined' : 'dev'));
 
 app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/categories', categoryRoutes);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);
