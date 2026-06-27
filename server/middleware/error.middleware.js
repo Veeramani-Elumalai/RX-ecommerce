@@ -24,7 +24,7 @@ function errorMiddleware(err, req, res, next) {
   }
 
   if (statusCode >= 400 && statusCode < 500) {
-    errorResponse.errors = [message];
+    errorResponse.errors = err.errors || [message];
     return res.status(statusCode).json(errorResponse);
   }
 
