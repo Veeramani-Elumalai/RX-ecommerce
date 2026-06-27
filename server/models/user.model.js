@@ -18,7 +18,7 @@ async function createUser(userData) {
   const connection = await getConnection();
   try {
     const [result] = await connection.execute(
-      'INSERT INTO users (first_name, last_name, email, password_hash, phone, role) VALUES (?, ?, ?, ?, ?, ?)',
+      'INSERT INTO users (first_name, last_name, email, password, phone, role) VALUES (?, ?, ?, ?, ?, ?)',
       [
         userData.firstName,
         userData.lastName,

@@ -33,7 +33,7 @@ async function loginUser(payload) {
     throw error;
   }
 
-  const isValidPassword = await bcrypt.compare(payload.password, user.password_hash);
+  const isValidPassword = await bcrypt.compare(payload.password, user.password);
 
   if (!isValidPassword) {
     const error = new Error('Invalid credentials');
