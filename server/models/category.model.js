@@ -34,6 +34,16 @@ async function findById(id) {
   }
 }
 
+async function findByNameOrSlug(name, slug) {
+  const connection = await getConnection();
+  try {
+    const [rows] = await connection.execute('SELECT * FROM categories WHERE name = ? OR slug = ?', [name, slug]);
+    return rows[0] || null;
+  } finally {
+    await connection.end();
+  }
+}
+
 async function createCategory(payload) {
   const connection = await getConnection();
   try {
@@ -79,6 +89,7 @@ async function deleteCategory(id) {
 module.exports = {
   findAll,
   findById,
+  findByNameOrSlug,
   createCategory,
   updateCategory,
   deleteCategory,

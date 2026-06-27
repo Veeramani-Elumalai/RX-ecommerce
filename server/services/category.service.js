@@ -20,7 +20,31 @@ async function getCategoryById(id) {
 }
 
 async function createCategory(payload) {
-  return categoryModel.createCategory(payload);
+  if (!payload.name || payload.name.trim().length < 2) {
+    const error = new Error('Category name must be at least 2 characters long');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (!payload.slug || payload.slug.trim().length < 2) {
+    const error = new Error('Category slug must be at least 2 characters long');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const existingCategory = await categoryModel.findByNameOrSlug(payload.name.trim(), payload.slug.trim());
+
+  if (existingCategory) {
+    const error = new Error('Category already exists');
+    error.statusCode = 409;
+    throw error;
+  }
+
+  return categoryModel.createCategory({
+    ...payload,
+    name: payload.name.trim(),
+    slug: payload.slug.trim(),
+  });
 }
 
 async function updateCategory(id, payload) {
@@ -32,7 +56,31 @@ async function updateCategory(id, payload) {
     throw error;
   }
 
-  return categoryModel.updateCategory(id, payload);
+  if (!payload.name || payload.name.trim().length < 2) {
+    const error = new Error('Category name must be at least 2 characters long');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (!payload.slug || payload.slug.trim().length < 2) {
+    const error = new Error('Category slug must be at least 2 characters long');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const duplicateCategory = await categoryModel.findByNameOrSlug(payload.name.trim(), payload.slug.trim());
+
+  if (duplicateCategory && duplicateCategory.id !== Number(id)) {
+    const error = new Error('Category already exists');
+    error.statusCode = 409;
+    throw error;
+  }
+
+  return categoryModel.updateCategory(id, {
+    ...payload,
+    name: payload.name.trim(),
+    slug: payload.slug.trim(),
+  });
 }
 
 async function deleteCategory(id) {
