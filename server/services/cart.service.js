@@ -29,6 +29,15 @@ async function addItem(userId, payload) {
     throw error;
   }
 
+  const cart = await cartModel.getCart(userId);
+  const existing = cart.items.find((item) => Number(item.product_id) === Number(payload.productId));
+  const nextQuantity = quantity + Number(existing?.quantity || 0);
+  if (nextQuantity > Number(product.stock)) {
+    const error = new Error(`Only ${product.stock} item(s) available for ${product.name}`);
+    error.statusCode = 400;
+    throw error;
+  }
+
   return cartModel.addItem(userId, Number(payload.productId), quantity);
 }
 
@@ -36,6 +45,21 @@ async function updateItem(userId, itemId, payload) {
   const quantity = Number(payload.quantity);
   if (!Number.isInteger(quantity) || quantity <= 0) {
     const error = new Error('quantity must be a positive integer');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const cart = await cartModel.getCart(userId);
+  const item = cart.items.find((entry) => Number(entry.id) === Number(itemId));
+
+  if (!item) {
+    const error = new Error('Cart item not found');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (quantity > Number(item.stock)) {
+    const error = new Error(`Only ${item.stock} item(s) available for ${item.name}`);
     error.statusCode = 400;
     throw error;
   }

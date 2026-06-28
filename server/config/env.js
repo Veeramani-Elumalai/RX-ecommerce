@@ -6,10 +6,10 @@ const dotenv = require('dotenv');
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
-function requireEnv(key) {
+function requireEnv(key, options = {}) {
   const value = process.env[key];
 
-  if (value === undefined || value === '') {
+  if (value === undefined || (!options.allowEmpty && value === '')) {
     throw new Error(`Missing required environment variable: ${key}`);
   }
 
@@ -32,7 +32,7 @@ const db = {
   port: toNumber(requireEnv('DB_PORT'), 'DB_PORT'),
   name: requireEnv('DB_NAME'),
   user: requireEnv('DB_USER'),
-  password: requireEnv('DB_PASSWORD'),
+  password: requireEnv('DB_PASSWORD', { allowEmpty: true }),
 };
 const jwt = {
   secret: requireEnv('JWT_SECRET'),

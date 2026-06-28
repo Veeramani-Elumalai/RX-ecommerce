@@ -28,6 +28,7 @@ function errorMiddleware(err, req, res, next) {
     return res.status(statusCode).json(errorResponse);
   }
 
+  console.error('Unexpected error:', err);
   errorResponse.errors = ['Unexpected error occurred'];
   return res.status(statusCode).json(errorResponse);
 }

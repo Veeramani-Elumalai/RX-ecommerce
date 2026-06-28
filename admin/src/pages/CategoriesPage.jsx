@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createCategory, deleteCategory, fetchCategories, updateCategory } from '../services/categoryService';
 
 const emptyCategory = { name: '', slug: '', description: '', image: '' };
@@ -14,7 +14,7 @@ export default function CategoriesPage() {
 
   const filteredCategories = useMemo(() => categories.filter((category) => `${category.name} ${category.slug}`.toLowerCase().includes(search.toLowerCase())), [categories, search]);
 
-  async function loadCategories() {
+  const loadCategories = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetchCategories();
@@ -24,11 +24,12 @@ export default function CategoriesPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadCategories();
-  }, []);
+  }, [loadCategories]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();

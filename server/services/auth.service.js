@@ -41,6 +41,12 @@ async function loginUser(payload) {
     throw error;
   }
 
+  if (!user.is_active) {
+    const error = new Error('Account is deactivated');
+    error.statusCode = 403;
+    throw error;
+  }
+
   const token = jwt.sign(
     { id: user.id, email: user.email, role: user.role },
     config.jwt.secret,
@@ -51,6 +57,8 @@ async function loginUser(payload) {
     user: {
       id: user.id,
       firstName: user.first_name,
+      lastName: user.last_name,
+      email: user.email,
       role: user.role,
     },
     token,
@@ -69,7 +77,9 @@ async function getCurrentUser(userId) {
   return {
     id: user.id,
     firstName: user.first_name,
+    lastName: user.last_name,
     email: user.email,
+    phone: user.phone,
     role: user.role,
   };
 }

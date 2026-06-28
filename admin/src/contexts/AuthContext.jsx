@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useEffect, useMemo, useState } from 'react';
 import { fetchCurrentUser, loginUser } from '../services/authService';
 
 const AuthContext = createContext(null);
@@ -20,9 +20,12 @@ export function AuthProvider({ children }) {
 
       try {
         const response = await fetchCurrentUser();
+        if (response.data?.role !== 'admin') {
+          throw new Error('Not admin');
+        }
         setUser(response.data);
         localStorage.setItem('admin_user', JSON.stringify(response.data));
-      } catch (error) {
+      } catch {
         localStorage.removeItem('admin_token');
         localStorage.removeItem('admin_user');
         setToken('');
@@ -40,6 +43,12 @@ export function AuthProvider({ children }) {
     const nextToken = response.data.token;
     const nextUser = response.data.user;
 
+    if (nextUser.role !== 'admin') {
+      const error = new Error('Admin access required');
+      error.response = { data: { message: 'This account does not have admin privileges.' } };
+      throw error;
+    }
+
     localStorage.setItem('admin_token', nextToken);
     localStorage.setItem('admin_user', JSON.stringify(nextUser));
     setToken(nextToken);
@@ -54,11 +63,17 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
-  const value = useMemo(() => ({ user, token, loading, login, logout, isAuthenticated: Boolean(token && user) }), [user, token, loading]);
+  const value = useMemo(() => ({
+    user,
+    token,
+    loading,
+    login,
+    logout,
+    isAuthenticated: Boolean(token && user),
+    isAdmin: user?.role === 'admin',
+  }), [user, token, loading]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-export function useAuth() {
-  return useContext(AuthContext);
-}
+export default AuthContext;

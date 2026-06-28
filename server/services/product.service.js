@@ -109,7 +109,7 @@ async function getProducts(query = {}) {
   const page = parsePositiveInteger(query.page, 1);
   const limit = parsePositiveInteger(query.limit, 10);
   const search = normalizeString(query.search);
-  const category = Number(query.category);
+  const category = Number(query.categoryId ?? query.category);
   const categoryId = Number.isInteger(category) && category > 0 ? category : null;
   const sortBy = ['name', 'price', 'created_at'].includes(query.sortBy) ? query.sortBy : 'created_at';
   const sortOrder = query.sortOrder === 'asc' ? 'asc' : 'desc';

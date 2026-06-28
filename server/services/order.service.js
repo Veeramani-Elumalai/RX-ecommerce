@@ -37,6 +37,24 @@ async function getTopSellingProducts(limit = 5) {
   return orderModel.getTopSellingProducts(limit);
 }
 
+async function getAllOrders(query) {
+  return orderModel.findAllAdmin(query);
+}
+
+async function updateOrderStatus(id, payload) {
+  return orderModel.updateOrder(id, payload);
+}
+
+async function getAdminOrderById(id) {
+  const order = await orderModel.findById(id);
+  if (!order || !order.length) {
+    const error = new Error('Order not found');
+    error.statusCode = 404;
+    throw error;
+  }
+  return order;
+}
+
 module.exports = {
   createOrder,
   getOrders,
@@ -45,4 +63,7 @@ module.exports = {
   getDashboardMetrics,
   getLowStockProducts,
   getTopSellingProducts,
+  getAllOrders,
+  updateOrderStatus,
+  getAdminOrderById,
 };

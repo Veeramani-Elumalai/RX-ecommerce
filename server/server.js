@@ -26,7 +26,14 @@ async function startServer() {
     await testDatabaseConnection();
     console.log('Database connection successful');
   } catch (error) {
-    console.warn('Database connection unavailable:', error.message);
+    const details = [
+      error.message || String(error),
+      error.code ? `code=${error.code}` : '',
+      error.errno ? `errno=${error.errno}` : '',
+      error.sqlState ? `sqlState=${error.sqlState}` : '',
+    ].filter(Boolean).join(' ');
+
+    console.warn(`Database connection unavailable: ${details}`);
 
     if (config.nodeEnv === 'production') {
       console.error('Stopping server because database connection is required in production.');

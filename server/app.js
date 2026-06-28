@@ -2,6 +2,7 @@
 /* global require */
 
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -16,6 +17,8 @@ const cartRoutes = require('./routes/cart.routes');
 const orderRoutes = require('./routes/order.routes');
 const dashboardRoutes = require('./routes/dashboard.routes');
 const profileRoutes = require('./routes/profile.routes');
+const adminOrderRoutes = require('./routes/admin/order.routes');
+const adminCustomerRoutes = require('./routes/admin/customer.routes');
 const notFoundMiddleware = require('./middleware/notFound.middleware');
 const errorMiddleware = require('./middleware/error.middleware');
 
@@ -34,6 +37,8 @@ app.use(rateLimit({
   legacyHeaders: false,
 }));
 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
@@ -41,6 +46,8 @@ app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin/dashboard', dashboardRoutes);
+app.use('/api/admin/orders', adminOrderRoutes);
+app.use('/api/admin/customers', adminCustomerRoutes);
 app.use('/api/profile', profileRoutes);
 
 app.use(notFoundMiddleware);

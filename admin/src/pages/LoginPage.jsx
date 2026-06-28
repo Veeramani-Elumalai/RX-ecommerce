@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/useAuth';
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -42,6 +42,9 @@ export default function LoginPage() {
         <button type="submit" className="btn btn--primary" disabled={loading}>
           {loading ? 'Signing in...' : 'Sign in'}
         </button>
+        <p className="demo-credentials">
+          Demo: admin@rxecommerce.com / admin123
+        </p>
       </form>
     </div>
   );

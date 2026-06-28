@@ -1,10 +1,12 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/useAuth';
 
 const navigation = [
   { to: '/', label: 'Dashboard' },
-  { to: '/categories', label: 'Categories' },
+  { to: '/orders', label: 'Orders' },
   { to: '/products', label: 'Products' },
+  { to: '/categories', label: 'Categories' },
+  { to: '/customers', label: 'Customers' },
 ];
 
 export default function Layout() {
@@ -41,7 +43,7 @@ export default function Layout() {
         <header className="topbar">
           <div>
             <h1>Administration</h1>
-            <p>Manage products, categories, and storefront content.</p>
+            <p>Manage orders, products, categories, and customers.</p>
           </div>
         </header>
         <section className="page-content">

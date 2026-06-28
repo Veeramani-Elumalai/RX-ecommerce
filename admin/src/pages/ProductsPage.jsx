@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createProduct, deleteProduct, fetchProducts, updateProduct } from '../services/productService';
 import { fetchCategories } from '../services/categoryService';
 
@@ -30,7 +30,7 @@ export default function ProductsPage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState('');
 
-  async function loadProducts() {
+  const loadProducts = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetchProducts({ page, limit: 10, search, category: categoryFilter, sortBy, sortOrder });
@@ -42,15 +42,16 @@ export default function ProductsPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [categoryFilter, page, search, sortBy, sortOrder]);
 
   useEffect(() => {
     fetchCategories().then((response) => setCategories(response.data || [])).catch(() => setCategories([]));
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadProducts();
-  }, [page, search, categoryFilter, sortBy, sortOrder]);
+  }, [loadProducts]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
